@@ -11,7 +11,7 @@ if __name__ == '__main__':
     mp.set_start_method('spawn', force=True)
 
 # Define paths
-PROJECT_ROOT = Path.cwd().parent  # /teamspace/studios/this_studio/
+PROJECT_ROOT = Path.cwd()  # /teamspace/studios/this_studio/
 DATA_DIR = PROJECT_ROOT / 'data'
 TEST_CSV = DATA_DIR / 'Test.csv'
 MODEL_PATH = PROJECT_ROOT / 'best_model.pth'
