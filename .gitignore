@@ -1,0 +1,9 @@
+data
+/data
+data/*
+/data/*
+
+.lightning_studio
+/.lightning_studio
+/.lightning_studio/*
+.lightning_studio/*
