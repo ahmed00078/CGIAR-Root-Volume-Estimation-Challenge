@@ -32,7 +32,7 @@ CONFIG = {
     "model_dir": "data/Models/",  # Adjusted to match your structure
     "output_dir": "output/",
     "batch_size": 8,
-    "num_epochs": 50,  # Increased epochs for better training
+    "num_epochs": 30,  # Increased epochs for better training
     "learning_rate": 1e-4,
     "num_folds": 5,
     "device": torch.device("cuda" if torch.cuda.is_available() else "cpu"),
@@ -298,12 +298,26 @@ def train_fold(train_loader, val_loader, model, optimizer, criterion, device, nu
 
 def train_xgboost_model(X_train, y_train, X_val, y_val, fold, output_dir):
     params = {
-        'objective': 'reg:squarederror', 'eval_metric': 'rmse', 'learning_rate': 0.05,
-        'max_depth': 6, 'min_child_weight': 1, 'subsample': 0.8, 'colsample_bytree': 0.8,
-        'n_estimators': 1000
+        'objective': 'reg:squarederror', 
+        'eval_metric': 'rmse', 
+        'learning_rate': 0.05,
+        'max_depth': 6, 
+        'min_child_weight': 1, 
+        'subsample': 0.8, 
+        'colsample_bytree': 0.8,
+        'n_estimators': 1000,
+        'early_stopping_rounds': 50  # Move this parameter to params dictionary
     }
     model = xgb.XGBRegressor(**params)
-    model.fit(X_train, y_train, eval_set=[(X_val, y_val)], early_stopping_rounds=50, verbose=100)
+    
+    # Remove early_stopping_rounds from fit()
+    model.fit(
+        X_train, 
+        y_train, 
+        eval_set=[(X_val, y_val)],
+        verbose=100
+    )
+    
     model_path = os.path.join(output_dir, f"xgb_fold_{fold}.model")
     model.save_model(model_path)
     print(f"Saved XGBoost model for fold {fold} to {model_path}")
